@@ -1,0 +1,9 @@
+main23.py
+plantilla multimetros.xlsm
+plantilla pinzas multimetricas.xlsm
+data/interpolation/
+data/specs/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
