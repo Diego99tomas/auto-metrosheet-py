@@ -1,17 +1,10 @@
 import sqlite3
 from openpyxl import load_workbook
 from model_db.create_db import Create_DB
+from model_db.constants import Functions
 
 EXCEL_NAME="specs/specs.xlsx"
 DB_NAME="specs/specs.db"
-
-TABLAS_MAP = {
-    "VOLTAJE DC": "voltaje_dc",
-    "CORRIENTE DC": "corriente_dc",
-    "RESISTENCIAS": "resistencias",
-    "VOLTAJE AC": "voltaje_ac",
-    "CORRIENTE AC": "corriente_ac"
-}
 
 class ExportDataSpecsFromExcel():
     
@@ -26,16 +19,16 @@ class ExportDataSpecsFromExcel():
 
         cursor = conn.cursor()
 
-        for hoja_excel, tabla_sql in TABLAS_MAP.items():
-            if hoja_excel not in wb.sheetnames:
-                print(f"Saltando {hoja_excel}: No existe en el Excel.")
+        for func in Functions:
+            if func.name not in wb.sheetnames:
+                print(f"Saltando {func.name}: No existe en el Excel.")
                 continue
                 
-            ws = wb[hoja_excel]
-            es_ac = "ac" in tabla_sql
+            ws = wb[func.name]
+            es_ac = "ac" in func.value
             
             # Limpiar tabla antes de insertar para evitar duplicados si re-corres el script
-            cursor.execute(f"DELETE FROM {tabla_sql}")
+            cursor.execute(f"DELETE FROM {func.value}")
 
            
             for row in ws.iter_rows(min_row=1, max_row=50, values_only=True):
@@ -55,7 +48,7 @@ class ExportDataSpecsFromExcel():
                     decimal=Create_DB.normalizar_unidad(row[2],unidad)
                     show_spec=row[3]
                     
-                sql=f"INSERT INTO {tabla_sql} (valor, unidad, frecuencia, decimales, show_spec) VALUES (?, ?, ?, ?, ?)"   
+                sql=f"INSERT INTO {func.value} (valor, unidad, frecuencia, decimales, show_spec) VALUES (?, ?, ?, ?, ?)"   
                 params=(valor,unidad,frec,decimal,show_spec) 
 
                 cursor.execute(sql,params)

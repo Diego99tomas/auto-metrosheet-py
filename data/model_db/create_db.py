@@ -1,15 +1,10 @@
 from dataclasses import dataclass
+from model_db.constants import Functions
 import sqlite3
 
 @dataclass
 class Create_DB():
-    TABLAS_MAP = {
-    "VOLTAJE DC": "voltaje_dc",
-    "CORRIENTE DC": "corriente_dc",
-    "RESISTENCIAS": "resistencias",
-    "VOLTAJE AC": "voltaje_ac",
-    "CORRIENTE AC": "corriente_ac"}
-    
+
     DB_NAME:str
     EXCEL_NAME:str
 
@@ -17,9 +12,9 @@ class Create_DB():
         conn=sqlite3.connect(self.DB_NAME)
         cursor=conn.cursor()
 
-        for tabla in ["voltaje_dc", "corriente_dc", "resistencias","voltaje_ac", "corriente_ac"]:
+        for tabla in Functions:
             cursor.execute(f"""
-                CREATE TABLE IF NOT EXISTS {tabla} (
+                CREATE TABLE IF NOT EXISTS {tabla.value} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     {value} REAL,
                     {unit} TEXT,

@@ -1,4 +1,5 @@
 from model_db.create_db import Create_DB
+from model_db.constants import Functions
 from openpyxl import load_workbook
 
 
@@ -7,15 +8,7 @@ DB_NAME="interpolation.db"
 
 
 class ExportDataInterpFromExcel():
-    
-    TABLAS_MAP = {
-    "VOLTAJE DC": "voltaje_dc",
-    "CORRIENTE DC": "corriente_dc",
-    "RESISTENCIAS": "resistencias",
-    "VOLTAJE AC": "voltaje_ac",
-    "CORRIENTE AC": "corriente_ac"}
-
-    
+        
     def migrar_datos(self,conn):
         """Migrar datos de interpolacion en excel a Base de Datos"""
         try:
@@ -26,16 +19,16 @@ class ExportDataInterpFromExcel():
 
         cursor = conn.cursor()
 
-        for hoja_excel, tabla_sql in self.TABLAS_MAP.items():
-            if hoja_excel not in wb.sheetnames:
-                print(f"Saltando {hoja_excel}: No existe en el Excel.")
+        for func in Functions:
+            if func.name not in wb.sheetnames:
+                print(f"Saltando {func.name}: No existe en el Excel.")
                 continue
                 
-            ws = wb[hoja_excel]
-            es_ac = "ac" in tabla_sql
+            ws = wb[func.name]
+            es_ac = "ac" in func.value
             
           
-            cursor.execute(f"DELETE FROM {tabla_sql}")
+            cursor.execute(f"DELETE FROM {func.value}")
 
           
             for row in ws.iter_rows(min_row=1, max_row=40, values_only=True):
@@ -56,7 +49,7 @@ class ExportDataInterpFromExcel():
                     medida=Create_DB.normalizar_unidad(row[2],row[1])
                     incert=Create_DB.normalizar_unidad(row[3],row[1])
                     
-                sql=f"INSERT INTO {tabla_sql} (lectura, unidad, frecuencia, medida, incert) VALUES (?, ?, ?, ?, ?)" 
+                sql=f"INSERT INTO {func.value} (lectura, unidad, frecuencia, medida, incert) VALUES (?, ?, ?, ?, ?)" 
                 params= (lectura,unidad,frec,medida,incert)
                  
 
