@@ -1,7 +1,6 @@
 from services.interpo_search import interpol_search_in_db
 from services.specs_search import specs_search_in_db
 from services.cmc_verify import cmc_verification
-from services.layout import get_layout
 from models.range_parser import RangeParser
 
     

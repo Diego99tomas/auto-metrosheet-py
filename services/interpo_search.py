@@ -1,41 +1,17 @@
 import sqlite3
+from services.data_processing import normalizar_unidad,desnormalizar_unidad
 
 DB_INTERP_NAME='data/interpolation/interpolation.db'
 
-
-def normalizar_unidad(value, magnitud):
-    """Convierte cualquier unidad a la unidad base (V, A, Ohm)."""
-    conversiones = {
-        "mV": 1e-3, "µV": 1e-6,
-        "mA": 1e-3, "µA": 1e-6,
-        "Ω": 1, "kΩ": 1e3, "MΩ": 1e6,
-        "V": 1, "A": 1
-    }
-    return value * conversiones.get(magnitud, 1)
-
-def desnormalizar_unidad(valor, multiplicador):
-    """Convierte de la unidad base a la unidad de salida deseada."""
-    mult = str(multiplicador).strip() if multiplicador else ""
-    conversiones = {
-        "mV": 1e3, "µV": 1e6,
-        "mA": 1e3, "µA": 1e6,
-        "Ω": 1, "kΩ": 1e-3, "MΩ": 1e-6,
-        "V": 1, "A": 1
-    }
-    return valor * conversiones.get(mult, 1)
-
-
 def interpol_search_in_db(type_table:str,valor:float,unidad:str,frecuencia=None):
-
+    """Busqueda en db de puntos inferior y superior para la interpolacion"""
     conn = sqlite3.connect(DB_INTERP_NAME)
     cursor= conn.cursor()
     
-
     if 'ac' in type_table and frecuencia is not None:
         if frecuencia != '60 Hz':
             frecuencia='1 kHz'
 
-    
     busqueda = normalizar_unidad(valor,unidad)
        
     

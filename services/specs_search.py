@@ -1,7 +1,8 @@
 import sqlite3
-from services.interpo_search import normalizar_unidad,desnormalizar_unidad
+from services.data_processing import normalizar_unidad,desnormalizar_unidad
 
 def specs_search_in_db(type_table:str,value:float,unid:str, frec=None):
+    """Busqueda en db de decimales y show specs del patron"""
     DB_PATH='data/specs/specs.db'
 
     is_ac= 'ac' in type_table
@@ -11,7 +12,6 @@ def specs_search_in_db(type_table:str,value:float,unid:str, frec=None):
     if type_table == "voltaje_dc":
         busqueda=normalizar_unidad(abs(value),unid)
     
-    
     if is_ac:
         query= f"SELECT decimales,show_spec FROM {type_table} WHERE valor=? AND frecuencia=?"
         params=(busqueda,frec)
@@ -20,14 +20,11 @@ def specs_search_in_db(type_table:str,value:float,unid:str, frec=None):
         query= f"SELECT decimales,show_spec FROM {type_table} WHERE valor=? "
         params=(busqueda,)
 
-    
     with sqlite3.connect(DB_PATH) as conn:
         cursor=conn.cursor()
         cursor.execute(query,params)
         resultado=cursor.fetchone()
        
-
-    
     if not resultado:
         return (0,0)
     
