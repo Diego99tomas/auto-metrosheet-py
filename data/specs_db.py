@@ -1,4 +1,3 @@
-import sqlite3
 from openpyxl import load_workbook
 from model_db.create_db import Create_DB
 from model_db.constants import Functions
@@ -31,7 +30,7 @@ class ExportDataSpecsFromExcel():
             cursor.execute(f"DELETE FROM {func.value}")
 
            
-            for row in ws.iter_rows(min_row=1, max_row=50, values_only=True):
+            for row in ws.iter_rows(min_row=1, max_row=70, values_only=True):
                 if row[0] is None: continue  # Saltar filas vacías
 
                 punto,unidad = row[0],row[1]
@@ -42,14 +41,17 @@ class ExportDataSpecsFromExcel():
                     frec=row[2]
                     decimal=Create_DB.normalizar_unidad(row[3],unidad)
                     show_spec=row[4]
+                    lcomp=row[5] if len(row)>5 else None
                     
                 else:
                     frec=None
+                    lcomp=None
                     decimal=Create_DB.normalizar_unidad(row[2],unidad)
                     show_spec=row[3]
                     
-                sql=f"INSERT INTO {func.value} (valor, unidad, frecuencia, decimales, show_spec) VALUES (?, ?, ?, ?, ?)"   
-                params=(valor,unidad,frec,decimal,show_spec) 
+                    
+                sql=f"INSERT INTO {func.value} (valor, unidad, frecuencia, decimales, show_spec,lcomp) VALUES (?, ?, ?, ?, ?, ?)"   
+                params=(valor,unidad,frec,decimal,show_spec,lcomp) 
 
                 cursor.execute(sql,params)
 
@@ -58,7 +60,7 @@ class ExportDataSpecsFromExcel():
 
 if __name__ == "__main__":
     db_specs=Create_DB(DB_NAME=DB_NAME,EXCEL_NAME=EXCEL_NAME)
-    conn=db_specs.create_db('valor','unidad','frecuencia','decimales','show_spec')
+    conn=db_specs.create_db('valor','unidad','frecuencia','decimales','show_spec','lcomp')
     export_data=ExportDataSpecsFromExcel()
     export_data.migrar_datos(conn)
     conn.close()
