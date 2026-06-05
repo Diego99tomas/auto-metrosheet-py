@@ -1,9 +1,9 @@
 import sqlite3
+from src.database.connection import get_connection,SPECS_DB_PATH
 from utility.data_processing import normalizar_unidad,desnormalizar_unidad
 
 def specs_search_in_db(type_table:str,value:float,unid:str, frec:str|None=None, lcomp:int|None=None):
     """Busqueda en db de decimales y show specs del patron"""
-    DB_PATH='data/specs/specs.db'
 
     is_ac= 'ac' in type_table
     
@@ -21,17 +21,29 @@ def specs_search_in_db(type_table:str,value:float,unid:str, frec:str|None=None, 
         query= f"SELECT decimales,show_spec FROM {type_table} WHERE valor=? "
         params=(busqueda,)
 
-    with sqlite3.connect(DB_PATH) as conn:
+    conn=get_connection(SPECS_DB_PATH)
+
+    try:
         cursor=conn.cursor()
-        cursor.execute(query,params)
-        resultado=cursor.fetchone()
-       
-    if not resultado:
-        return (0,0)
+        with conn:
+            cursor.execute(query,params)
+            val=cursor.fetchone()
+        
+        if val is None:
+            return [0,0]
+        
+        decimal_desnormalizado=val['decimales']
+        show_spec=val['show_spec']
+        
+        decimal = desnormalizar_unidad(decimal_desnormalizado,unid)
+        
+        return [decimal,show_spec]
     
-    decimal = desnormalizar_unidad(resultado[0],unid)
-    return [decimal,resultado[1]]
-  
+    except sqlite3.Error as e:
+        print(f"Error de SQLite en specs_search_in_db: {e}")
+        return [0, 0]     
+    finally:
+        conn.close()
 
 # resl=specs_search_in_db('voltaje_dc',0.4,'V')
 # print(resl)
