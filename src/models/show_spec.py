@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-@dataclass
+@dataclass(frozen=True)
 class ShowSpec:
     valor: float
     unidad: str
-    decimales: float
-    show_spec: str
+    cantidad_de_decimales: int
+    show_spec: float
     frecuencia: str|None=None
     lcomp:int|None=None
 
