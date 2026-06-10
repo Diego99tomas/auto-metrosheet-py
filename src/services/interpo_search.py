@@ -1,4 +1,4 @@
-from src.database.connection import get_connection,INTERPOLATION_DB_PATH
+from database.connection import get_connection,INTERPOLATION_DB_PATH
 from utility.data_processing import normalizar_unidad,desnormalizar_unidad
 
 

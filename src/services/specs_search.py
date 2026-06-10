@@ -1,5 +1,5 @@
 import sqlite3
-from src.database.connection import get_connection,SPECS_DB_PATH
+from database.connection import get_connection,SPECS_DB_PATH
 from utility.data_processing import normalizar_unidad,desnormalizar_unidad
 
 def specs_search_in_db(type_table:str,value:float,unid:str, frec:str|None=None, lcomp:int|None=None):
