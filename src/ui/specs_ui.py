@@ -116,10 +116,10 @@ class FrameSpecs(ctk.CTkFrame):
         self.lbl_error.configure(text=mensaje, text_color="green")
         self.after(3000, lambda: self.lbl_error.configure(text=""))
 
-    def _use_bobina(self):
+    def _use_bobina(self,funtion):
         """Asigna el valor 1 si es corriente ac sino None"""
         val_bobina=int(self.bobina.get())
-        return val_bobina if val_bobina < 1 and self.function==Functions.CORRIENTE_AC else None
+        return val_bobina if val_bobina==1 and funtion==Functions.CORRIENTE_AC else None
         
     def _guardar(self):
         self.lbl_error.configure(text="")
@@ -130,7 +130,7 @@ class FrameSpecs(ctk.CTkFrame):
         txt_show_spec=self.show_spec.get().strip()
         txt_frecuencia=self.frecuencia.get().strip()
 
-        val_lcomp=self._use_bobina()
+        val_lcomp=self._use_bobina(txt_funcion)
 
         if not txt_valor or not txt_decimales or not txt_show_spec:
             self._mostrar_error("Error: Todos los campos obligatorios deben ser llenados.")
@@ -160,6 +160,7 @@ class FrameSpecs(ctk.CTkFrame):
             )
 
             add_show_spec(txt_funcion,new_spec)
+            
             self._mostrar_exito("Show Spec guardado exitosamente.")
             
             self._limpiar_formulario()
