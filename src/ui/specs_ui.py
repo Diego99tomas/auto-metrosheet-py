@@ -116,7 +116,7 @@ class FrameSpecs(ctk.CTkFrame):
         self.lbl_error.configure(text=mensaje, text_color="green")
         self.after(3000, lambda: self.lbl_error.configure(text=""))
 
-    def _use_bobina(self,funtion):
+    def _use_bobina(self,funtion:Functions)->int|None:
         """Asigna el valor 1 si es corriente ac sino None"""
         val_bobina=int(self.bobina.get())
         return val_bobina if val_bobina==1 and funtion==Functions.CORRIENTE_AC else None
