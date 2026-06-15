@@ -1,3 +1,4 @@
+from config.constants import TypeEquipment
 
 def get_layout(type:str):
     """Elige el numero de filas correcto para cada tipo de equipo (PINZA O MULTIMETRO)"""
@@ -11,7 +12,7 @@ def get_layout(type:str):
     }
 
 
-    if "multimetro" in type:
+    if type in TypeEquipment.MULTIMETRO:
         MULTI_LAYOUT={
             'corriente_dc': {'start_row': 91, 'step': 2, 'mid_row': 97, 'after_mid': 100,'normal_point':[0.1,0.9],'mid_point':[0.1,0.9,-0.9],'final_row':105,
                              "special_point":[0.5,0.9],'is_mult':True,'special_unit':'A'},
