@@ -7,7 +7,7 @@ def specs_search_in_db(type_table:str,value:float,unid:str, frec:str|None=None, 
 
     is_ac= 'ac' in type_table
     
-    busqueda=normalizar_unidad(abs(value),unid)
+    busqueda=normalizar_unidad(round(abs(value),3),unid)
     
     if is_ac:
         if lcomp is None:
@@ -45,8 +45,7 @@ def specs_search_in_db(type_table:str,value:float,unid:str, frec:str|None=None, 
     finally:
         conn.close()
 
-# resl=specs_search_in_db('voltaje_dc',0.4,'V')
-# print(resl)
+
 
 
 
