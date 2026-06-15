@@ -1,4 +1,10 @@
 from enum import StrEnum
+import os 
+
+class TypeEquipment(StrEnum):
+    PINZA="PINZA MULTIMETRICA"
+    MULTIMETRO="MULTIMETRO DIGITAL"
+
 
 class Functions(StrEnum):
     VOLTAJE_DC= "voltaje_dc"
@@ -7,10 +13,13 @@ class Functions(StrEnum):
     CORRIENTE_AC = "corriente_ac"
     RESISTENCIAS= "resistencias"
 
-    @property
-    def label(self)->str:
-        """Formatea el valor del enum para mostrarlo en la UI."""
-        text=self.value.replace("_"," ").capitalize()
-        text=text.replace(" dc"," DC").replace(" ac"," AC")
-        return text
 
+FUNCTIONS_NO_FQ={Functions.VOLTAJE_DC,Functions.CORRIENTE_DC,Functions.RESISTENCIAS}
+FUNCTIONS_NEED_FQ={Functions.VOLTAJE_AC,Functions.CORRIENTE_AC}
+FUNCTIONS_CORRIENTE={Functions.CORRIENTE_AC,Functions.CORRIENTE_DC}
+
+TEMPLATE_MULTIMETRO=os.path.join('src','templates','plantilla multimetros.xlsm')
+TEMPLATE_PINZA=os.path.join('src','templates','plantilla pinzas multimetricas.xlsm')
+
+TEMPLATES={TypeEquipment.MULTIMETRO:TEMPLATE_MULTIMETRO,
+           TypeEquipment.PINZA:TEMPLATE_PINZA}
