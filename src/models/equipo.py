@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from config.constants import TypeEquipment
 
 @dataclass
 class Equipment:
-    type: str
+    type: TypeEquipment
     manufacturer: str
     model: str
     serie: str
