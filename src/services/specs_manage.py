@@ -1,17 +1,16 @@
-from src.database.connection import get_connection,SPECS_DB_PATH
-from src.utility.data_processing import normalizar_unidad
-from src.config.constants import Functions
-from src.models.show_spec import ShowSpec
-from src.config.exceptions import (FrequencyRequiredError,
+from database.connection import get_connection,SPECS_DB_PATH
+from utility.data_processing import normalizar_unidad
+from config.constants import Functions
+from models.show_spec import ShowSpec
+from config.exceptions import (FrequencyRequiredError,
                                    FrequencyNotRequiredError,
                                    BobinaOnlyInCorrienteError,
                                    DecimalValueError,
                                    IncorrectCoilUseError)
+from config.constants import( FUNCTIONS_NO_FQ,
+                            FUNCTIONS_CORRIENTE,
+                            FUNCTIONS_NEED_FQ)
 import sqlite3 
-
-FUNCTIONS_NO_FQ={Functions.VOLTAJE_DC,Functions.CORRIENTE_DC,Functions.RESISTENCIAS}
-FUNCTIONS_NEED_FQ={Functions.VOLTAJE_AC,Functions.CORRIENTE_AC}
-FUNCTIONS_CORRIENTE={Functions.CORRIENTE_AC,Functions.CORRIENTE_DC}
 
 
 def insert_in_db_specs(function:Functions, spec:ShowSpec, decimal_final:float, show_spec_final:float):
